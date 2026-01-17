@@ -13,17 +13,20 @@ const useNews = ({ country, category, pageSize, apiKey, setProgress }) => {
     const [error, setError] = useState(null);
 
     // Initial fetch
-    const loadNews = useCallback(async () => {
+    const loadNews = useCallback(async (forceRefresh = false) => {
         setProgress?.(15);
         const cacheKey = getCacheKey(country, category, 1);
-        const cachedData = getCachedData(cacheKey);
 
-        if (cachedData) {
-            setArticles(cachedData.articles);
-            setTotalArticles(cachedData.totalResults);
-            setLoading(false);
-            setProgress?.(100);
-            return;
+        // Check cache unless force refresh
+        if (!forceRefresh) {
+            const cachedData = getCachedData(cacheKey);
+            if (cachedData) {
+                setArticles(cachedData.articles);
+                setTotalArticles(cachedData.totalResults);
+                setLoading(false);
+                setProgress?.(100);
+                return;
+            }
         }
 
         setLoading(true);
@@ -45,6 +48,18 @@ const useNews = ({ country, category, pageSize, apiKey, setProgress }) => {
             setProgress?.(100);
         }
     }, [country, category, pageSize, apiKey, setProgress]);
+
+    // Refresh function (clears cache and refetches)
+    const refresh = useCallback(async () => {
+        // Clear cache for this category
+        for (let i = 1; i <= page; i++) {
+            const cacheKey = getCacheKey(country, category, i);
+            sessionStorage.removeItem(cacheKey);
+        }
+        setPage(1);
+        setArticles([]);
+        await loadNews(true);
+    }, [country, category, page, loadNews]);
 
     // Fetch more data for infinite scroll
     const fetchMoreData = useCallback(async () => {
@@ -70,10 +85,11 @@ const useNews = ({ country, category, pageSize, apiKey, setProgress }) => {
         }
     }, [page, country, category, pageSize, apiKey]);
 
-    // Load on mount
+    // Load on mount or when category changes
     useEffect(() => {
         setPage(1);
         setArticles([]);
+        setError(null);
         loadNews();
     }, [loadNews]);
 
@@ -83,7 +99,8 @@ const useNews = ({ country, category, pageSize, apiKey, setProgress }) => {
         error,
         totalArticles,
         fetchMoreData,
-        hasMore: articles.length < totalArticles
+        hasMore: articles.length < totalArticles,
+        refresh
     };
 };
 

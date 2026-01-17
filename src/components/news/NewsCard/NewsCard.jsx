@@ -1,8 +1,8 @@
 import React from 'react';
-import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
+import { FaBookmark, FaRegBookmark, FaClock } from 'react-icons/fa';
 import { useBookmarks } from '../../../context/BookmarksContext';
 import { FALLBACK_IMAGE } from '../../../utils/constants';
-import { truncateText, formatDate } from '../../../utils/formatters';
+import { truncateText } from '../../../utils/formatters';
 
 const NewsCard = ({ title, description, imgUrl, newsUrl, author, date, source, onReadMore }) => {
     const { addToBookmarks, removeFromBookmarks, isBookmarked } = useBookmarks();
@@ -17,97 +17,61 @@ const NewsCard = ({ title, description, imgUrl, newsUrl, author, date, source, o
         }
     };
 
+    // Format relative time
+    const getRelativeTime = (dateString) => {
+        const now = new Date();
+        const published = new Date(dateString);
+        const diffInHours = Math.floor((now - published) / (1000 * 60 * 60));
+
+        if (diffInHours < 1) return 'Just now';
+        if (diffInHours < 24) return `${diffInHours}h ago`;
+        if (diffInHours < 48) return 'Yesterday';
+        const diffInDays = Math.floor(diffInHours / 24);
+        if (diffInDays < 7) return `${diffInDays}d ago`;
+        return published.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    };
+
     return (
-        <div
-            className="card h-100 border-0 shadow-sm card-hover"
-            onClick={onReadMore}
-            role="button"
-            tabIndex={0}
-            style={{
-                backgroundColor: 'var(--bg-surface)',
-                borderRadius: '16px',
-                overflow: 'hidden',
-                cursor: 'pointer',
-                transition: 'transform 0.3s ease, box-shadow 0.3s ease'
-            }}
-        >
+        <div className="news-card" onClick={onReadMore}>
             {/* Image Container */}
-            <div style={{ position: 'relative', overflow: 'hidden', paddingTop: '56.25%' /* 16:9 Aspect Ratio */ }}>
+            <div className="news-card-image">
                 <img
                     src={imgUrl || FALLBACK_IMAGE}
-                    className="card-img-top position-absolute top-0 start-0 w-100 h-100"
                     alt={title}
-                    style={{ objectFit: 'cover' }}
                     loading="lazy"
                 />
+                {/* Source Badge on Image */}
+                <span className="news-card-source">{source?.name}</span>
+
+                {/* Bookmark Button */}
                 <button
                     onClick={handleBookmark}
-                    className="btn shadow-sm d-flex align-items-center justify-content-center"
-                    style={{
-                        position: 'absolute',
-                        top: '10px',
-                        right: '10px',
-                        width: '35px',
-                        height: '35px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                        border: 'none',
-                        zIndex: 10,
-                        color: isSaved ? '#dc3545' : '#6c757d'
-                    }}
+                    className={`news-card-bookmark ${isSaved ? 'saved' : ''}`}
+                    aria-label={isSaved ? 'Remove bookmark' : 'Add bookmark'}
                 >
-                    {isSaved ? <FaBookmark /> : <FaRegBookmark />}
+                    {isSaved ? <FaBookmark size={12} /> : <FaRegBookmark size={12} />}
                 </button>
             </div>
 
-            <div className="card-body p-4 d-flex flex-column">
-                {/* Meta Header */}
-                <div className="d-flex justify-content-between align-items-center mb-2">
-                    <span className="badge bg-light text-dark border" style={{
-                        fontWeight: '600',
-                        fontSize: '0.75rem',
-                        color: 'var(--text-secondary)',
-                        background: 'transparent'
-                    }}>
-                        {source?.name}
-                    </span>
-                    <small className="text-muted" style={{ fontSize: '0.75rem' }}>
-                        {formatDate(date)}
-                    </small>
-                </div>
-
+            {/* Content */}
+            <div className="news-card-content">
                 {/* Title */}
-                <h5 className="card-title mb-3" style={{
-                    color: 'var(--text-primary)',
-                    fontWeight: '800',
-                    fontSize: '1.1rem',
-                    lineHeight: '1.4'
-                }}>
-                    <span className="text-decoration-none" style={{ color: 'inherit' }}>
-                        {truncateText(title, 60)}
-                    </span>
-                </h5>
+                <h3 className="news-card-title">
+                    {truncateText(title, 75)}
+                </h3>
 
                 {/* Description */}
-                <p className="card-text flex-grow-1 mb-4" style={{
-                    color: 'var(--text-secondary)',
-                    fontSize: '0.95rem',
-                    lineHeight: '1.6'
-                }}>
-                    {truncateText(description, 88)}
+                <p className="news-card-description">
+                    {truncateText(description, 100)}
                 </p>
 
-                {/* Footer / Meta */}
-                <div className="d-flex justify-content-between align-items-center mt-auto pt-3 border-top" style={{ borderColor: 'var(--border-color)' }}>
-                    <small className="text-muted fst-italic">
-                        By {author ? truncateText(author, 20) : 'Unknown'}
-                    </small>
-                    <span
-                        className="btn btn-link text-decoration-none p-0 fw-bold"
-                        style={{ color: 'var(--text-accent)', fontSize: '0.9rem', border: 'none', background: 'none' }}
-                    >
-                        Read More →
-                    </span>
+                {/* Footer */}
+                <div className="news-card-footer">
+                    <div className="news-card-meta">
+                        <FaClock size={11} />
+                        <span>{getRelativeTime(date)}</span>
+                    </div>
+                    <span className="news-card-read-more">Read →</span>
                 </div>
             </div>
         </div>

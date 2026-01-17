@@ -15,16 +15,18 @@
 
 ## ✨ Key Features
 
-- **📱 Responsive Design**: Fully responsive layout that works seamlessly across all devices
+- **📱 Responsive Design**: Fully responsive 3-column grid layout that works seamlessly across all devices
 - **🔄 Infinite Scroll**: Smooth infinite scrolling for seamless news browsing
 - **⚡ Smart Caching**: Session-based caching to minimize API calls and ensure instant navigation
-- **🔖 Bookmarks**: "Read Later" functionality with persistent storage for your favorite articles
+- **🔖 Bookmarks**: Elegant ribbon-style bookmark buttons with "Read Later" functionality
 - **🔗 Social Sharing**: Native sharing integration to easily share articles via WhatsApp, Twitter, etc.
-- **🌗 Dark Mode**: Premium dark mode support with system preference detection
-- **📂 Category Navigation**: Browse news by categories (Business, Technology, Sports, Science, Health, Entertainment)
+- **🌗 Dark Mode**: Premium dark mode support with system preference detection and auto mode
+- **📂 Category Pills**: Modern pill-based category navigation with smooth transitions
 - **🌍 Multi-country Support**: Currently configured for US news with easy country switching
-- **🎨 Modern Premium UI**: Glassmorphism aesthetics, smooth animations, and polished typography
-- **📊 Progress Tracking**: Visual progress indicators during data fetching
+- **🎨 Modern Premium UI**: Glassmorphism navbar, skeleton loaders, stagger animations, and polished typography
+- **📊 Progress Tracking**: Visual progress indicators and loading skeletons
+- **📲 Pull-to-Refresh**: Mobile-friendly pull-down gesture to refresh news
+- **🖼️ Custom Branding**: Custom favicon and app icons matching the inBrief brand
 
 ## 🛠️ Tech Stack
 
@@ -83,13 +85,17 @@ inBrief/
 │   ├── assets/                 # Static assets (images, icons)
 │   ├── components/
 │   │   ├── common/             # Reusable UI components
+│   │   │   ├── CategoryPills/  # Category navigation pills
+│   │   │   ├── EmptyState/     # Empty & error state displays
+│   │   │   ├── PullToRefresh/  # Touch pull-to-refresh
+│   │   │   ├── SkeletonCard/   # Loading skeleton placeholders
 │   │   │   └── Spinner/
 │   │   ├── layout/             # Layout components
-│   │   │   └── Navbar/
+│   │   │   └── Navbar/         # Modern glassmorphism navbar
 │   │   └── news/               # News feature components
-│   │       ├── NewsCard/
+│   │       ├── NewsCard/       # Redesigned card with ribbon bookmark
 │   │       ├── NewsList/
-│   │       ├── NewsModal/
+│   │       ├── NewsModal/      # Modern slide-up article modal
 │   │       └── SavedNews/
 │   ├── context/
 │   │   ├── BookmarksContext.jsx  # Bookmark state management
@@ -154,11 +160,15 @@ The easiest way to deploy is using Vercel:
 ## 🔮 Roadmap
 
 - [ ] 🔍 Search functionality
-- [x] 🌙 Dark mode toggle
-- [x] 📌 Bookmark/save articles
+- [x] 🌙 Dark mode toggle with auto/system detection
+- [x] 📌 Ribbon-style bookmark buttons
 - [x] ⚡ Smart Caching
 - [x] 🔗 Social Sharing
 - [x] 🏗️ Scalable project structure
+- [x] 💀 Skeleton loading states
+- [x] 📲 Pull-to-refresh on mobile
+- [x] 🎨 Modern UI redesign (cards, modal, navbar)
+- [x] 🖼️ Custom favicon & branding
 - [ ] ⚙️ User preferences
 - [ ] 🔔 Push notifications
 - [ ] 📱 Offline support with PWA
