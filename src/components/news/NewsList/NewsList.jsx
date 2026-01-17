@@ -4,7 +4,6 @@ import SkeletonLoader from '../../common/SkeletonLoader/SkeletonLoader';
 import NewsModal from '../NewsModal/NewsModal';
 import CategoryPills from '../../common/CategoryPills/CategoryPills';
 import EmptyState from '../../common/EmptyState/EmptyState';
-import PullToRefresh from '../../common/PullToRefresh/PullToRefresh';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import useNews from '../../../hooks/useNews';
 import { capitalizeFirst } from '../../../utils/formatters';
@@ -78,34 +77,32 @@ const NewsList = ({ country, category, pageSize, apiKey, setProgress }) => {
                 />
             )}
 
-            {/* News Grid with Pull to Refresh (mobile) */}
+            {/* News Grid */}
             {articles.length > 0 && (
-                <PullToRefresh onRefresh={handleRefresh}>
-                    <InfiniteScroll
-                        dataLength={articles.length}
-                        next={fetchMoreData}
-                        hasMore={hasMore}
-                        loader={<SkeletonLoader count={3} />}
-                        style={{ overflow: 'visible' }}
-                    >
-                        <div className="news-grid">
-                            {articles.map((article, index) => (
-                                <div className="news-card-animate" key={article.url + '-' + index}>
-                                    <NewsCard
-                                        title={article.title}
-                                        description={article.description}
-                                        imgUrl={article.urlToImage}
-                                        newsUrl={article.url}
-                                        author={article.author}
-                                        date={article.publishedAt}
-                                        source={article.source}
-                                        onReadMore={() => setSelectedArticle(article)}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </InfiniteScroll>
-                </PullToRefresh>
+                <InfiniteScroll
+                    dataLength={articles.length}
+                    next={fetchMoreData}
+                    hasMore={hasMore}
+                    loader={<SkeletonLoader count={3} />}
+                    style={{ overflow: 'visible' }}
+                >
+                    <div className="news-grid">
+                        {articles.map((article, index) => (
+                            <div className="news-card-animate" key={article.url + '-' + index}>
+                                <NewsCard
+                                    title={article.title}
+                                    description={article.description}
+                                    imgUrl={article.urlToImage}
+                                    newsUrl={article.url}
+                                    author={article.author}
+                                    date={article.publishedAt}
+                                    source={article.source}
+                                    onReadMore={() => setSelectedArticle(article)}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </InfiniteScroll>
             )}
 
             {selectedArticle && (

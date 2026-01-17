@@ -21,11 +21,6 @@ import { CATEGORIES } from './utils/constants';
 import './styles/global.css';
 import './styles/app.css';
 
-// Components
-import ReloadPrompt from './components/common/ReloadPrompt/ReloadPrompt';
-
-// ... (other imports)
-
 const App = () => {
   const apiKey = import.meta.env.VITE_NEWS_API;
   const [progress, setProgress] = useState(0);
@@ -37,7 +32,6 @@ const App = () => {
           <Router>
             <LoadingBar color="#f11946" progress={progress} />
             <Navbar />
-            <ReloadPrompt />
             <Routes>
               {/* Home route */}
               <Route
@@ -50,27 +44,29 @@ const App = () => {
               />
 
               {/* Dynamic category routes */}
-              {CATEGORIES.filter(cat => cat.key !== 'general').map((category) => (
-                <Route
-                  key={category.key}
-                  path={category.path}
-                  element={
-                    <CategoryPage
-                      category={category.key}
-                      setProgress={setProgress}
-                      apiKey={apiKey}
-                    />
-                  }
-                />
-              ))}
+              {
+                CATEGORIES.filter(cat => cat.key !== 'general').map((category) => (
+                  <Route
+                    key={category.key}
+                    path={category.path}
+                    element={
+                      <CategoryPage
+                        category={category.key}
+                        setProgress={setProgress}
+                        apiKey={apiKey}
+                      />
+                    }
+                  />
+                ))
+              }
 
               {/* Saved/Bookmarks route */}
               <Route path="/saved" element={<SavedPage />} />
-            </Routes>
-          </Router>
-        </div>
-      </BookmarksProvider>
-    </ThemeProvider>
+            </Routes >
+          </Router >
+        </div >
+      </BookmarksProvider >
+    </ThemeProvider >
   );
 };
 

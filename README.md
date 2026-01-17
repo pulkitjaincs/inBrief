@@ -25,10 +25,7 @@
 - **🌍 Multi-country Support**: Currently configured for US news with easy country switching
 - **🎨 Modern Premium UI**: Glassmorphism navbar, skeleton loaders, stagger animations, and polished typography
 - **📊 Progress Tracking**: Visual progress indicators and loading skeletons
-- **📲 Pull-to-Refresh**: Mobile-friendly pull-down gesture to refresh news
 - **🖼️ Custom Branding**: Custom favicon and app icons matching the inBrief brand
-- **📶 PWA Support**: Installable as a native app with offline support (service workers)
-- **🔔 Updates**: In-app notifications when new version updates are available
 
 ## 🛠️ Tech Stack
 
@@ -89,8 +86,6 @@ inBrief/
 │   │   ├── common/             # Reusable UI components
 │   │   │   ├── CategoryPills/  # Category navigation pills
 │   │   │   ├── EmptyState/     # Empty & error state displays
-│   │   │   ├── PullToRefresh/  # Touch pull-to-refresh
-│   │   │   ├── ReloadPrompt/   # PWA update notification toast
 │   │   │   ├── SkeletonCard/   # Loading skeleton placeholders
 │   │   │   └── Spinner/
 │   │   ├── layout/             # Layout components
@@ -169,12 +164,7 @@ The easiest way to deploy is using Vercel:
 - [x] 🔗 Social Sharing
 - [x] 🏗️ Scalable project structure
 - [x] 💀 Skeleton loading states
-- [x] 📲 Pull-to-refresh on mobile
-- [x] 🎨 Modern UI redesign (cards, modal, navbar)
-- [x] 🖼️ Custom favicon & branding
-- [ ] ⚙️ User preferences
-- [ ] 🔔 Push notifications
-- [x] 📱 Offline support with PWA (Service Workers)
+- [ ] 📱 Offline support with PWA (Service Workers)
 - [ ] 🌍 Multi-language support
 - [ ] 📊 Analytics dashboard
 
