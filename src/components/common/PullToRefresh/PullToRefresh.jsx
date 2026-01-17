@@ -5,33 +5,56 @@ const PullToRefresh = ({ onRefresh, children }) => {
     const [pulling, setPulling] = useState(false);
     const [pullDistance, setPullDistance] = useState(0);
     const [refreshing, setRefreshing] = useState(false);
+    const startY = React.useRef(0);
+    const isDragging = React.useRef(false);
 
     const threshold = 80;
-    let startY = 0;
 
     const handleTouchStart = useCallback((e) => {
+        // Only enable if we are at the very top of the page
         if (window.scrollY === 0) {
-            startY = e.touches[0].clientY;
-            setPulling(true);
+            startY.current = e.touches[0].clientY;
+            isDragging.current = true;
+            // Don't set pulling state yet to avoid immediate re-renders
         }
     }, []);
 
     const handleTouchMove = useCallback((e) => {
-        if (!pulling || refreshing) return;
+        if (!isDragging.current || refreshing) return;
 
         const currentY = e.touches[0].clientY;
-        const distance = Math.max(0, Math.min((currentY - startY) * 0.5, 120));
+        const diff = currentY - startY.current;
 
-        if (window.scrollY === 0 && distance > 0) {
-            setPullDistance(distance);
+        // If user scrolls up (diff < 0) or page is scrolled down, stop pulling
+        if (diff < 0 || window.scrollY > 0) {
+            isDragging.current = false;
+            setPulling(false);
+            setPullDistance(0);
+            return;
         }
-    }, [pulling, refreshing]);
+
+        // Apply resistance factor (0.4) and max limit
+        // Only start showing visuals after a small threshold (e.g. 10px) to prevent accidental jitters
+        if (diff > 10) {
+            setPulling(true);
+            const distance = Math.max(0, Math.min((diff - 10) * 0.4, 150));
+            setPullDistance(distance);
+
+            // Prevent default browser refresh behavior if we are effectively pulling
+            if (e.cancelable && distance > 5) {
+                e.preventDefault();
+            }
+        }
+    }, [refreshing]);
 
     const handleTouchEnd = useCallback(async () => {
+        isDragging.current = false;
         if (!pulling) return;
 
         if (pullDistance >= threshold && !refreshing) {
             setRefreshing(true);
+            // Snap to refreshing position
+            setPullDistance(threshold);
             try {
                 await onRefresh();
             } finally {

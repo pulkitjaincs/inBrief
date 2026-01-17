@@ -27,6 +27,8 @@
 - **📊 Progress Tracking**: Visual progress indicators and loading skeletons
 - **📲 Pull-to-Refresh**: Mobile-friendly pull-down gesture to refresh news
 - **🖼️ Custom Branding**: Custom favicon and app icons matching the inBrief brand
+- **📶 PWA Support**: Installable as a native app with offline support (service workers)
+- **🔔 Updates**: In-app notifications when new version updates are available
 
 ## 🛠️ Tech Stack
 
@@ -88,6 +90,7 @@ inBrief/
 │   │   │   ├── CategoryPills/  # Category navigation pills
 │   │   │   ├── EmptyState/     # Empty & error state displays
 │   │   │   ├── PullToRefresh/  # Touch pull-to-refresh
+│   │   │   ├── ReloadPrompt/   # PWA update notification toast
 │   │   │   ├── SkeletonCard/   # Loading skeleton placeholders
 │   │   │   └── Spinner/
 │   │   ├── layout/             # Layout components
@@ -171,7 +174,7 @@ The easiest way to deploy is using Vercel:
 - [x] 🖼️ Custom favicon & branding
 - [ ] ⚙️ User preferences
 - [ ] 🔔 Push notifications
-- [ ] 📱 Offline support with PWA
+- [x] 📱 Offline support with PWA (Service Workers)
 - [ ] 🌍 Multi-language support
 - [ ] 📊 Analytics dashboard
 
