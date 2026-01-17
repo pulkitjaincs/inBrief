@@ -1,9 +1,10 @@
 import React from 'react';
 import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
-import { useBookmarks } from '../context/BookmarksContext';
+import { useBookmarks } from '../../../context/BookmarksContext';
+import { FALLBACK_IMAGE } from '../../../utils/constants';
+import { truncateText, formatDate } from '../../../utils/formatters';
 
-const NewsItem = (props) => {
-    let { title, description, imgUrl, newsUrl, author, date, source } = props;
+const NewsCard = ({ title, description, imgUrl, newsUrl, author, date, source, onReadMore }) => {
     const { addToBookmarks, removeFromBookmarks, isBookmarked } = useBookmarks();
     const isSaved = isBookmarked(newsUrl);
 
@@ -16,13 +17,10 @@ const NewsItem = (props) => {
         }
     };
 
-    // Default image if none provided
-    const fallbackImage = "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80";
-
     return (
         <div
             className="card h-100 border-0 shadow-sm card-hover"
-            onClick={props.onReadMore}
+            onClick={onReadMore}
             role="button"
             tabIndex={0}
             style={{
@@ -36,10 +34,11 @@ const NewsItem = (props) => {
             {/* Image Container */}
             <div style={{ position: 'relative', overflow: 'hidden', paddingTop: '56.25%' /* 16:9 Aspect Ratio */ }}>
                 <img
-                    src={imgUrl || fallbackImage}
+                    src={imgUrl || FALLBACK_IMAGE}
                     className="card-img-top position-absolute top-0 start-0 w-100 h-100"
                     alt={title}
                     style={{ objectFit: 'cover' }}
+                    loading="lazy"
                 />
                 <button
                     onClick={handleBookmark}
@@ -70,10 +69,10 @@ const NewsItem = (props) => {
                         color: 'var(--text-secondary)',
                         background: 'transparent'
                     }}>
-                        {source.name}
+                        {source?.name}
                     </span>
                     <small className="text-muted" style={{ fontSize: '0.75rem' }}>
-                        {new Date(date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                        {formatDate(date)}
                     </small>
                 </div>
 
@@ -85,7 +84,7 @@ const NewsItem = (props) => {
                     lineHeight: '1.4'
                 }}>
                     <span className="text-decoration-none" style={{ color: 'inherit' }}>
-                        {title}
+                        {truncateText(title, 60)}
                     </span>
                 </h5>
 
@@ -95,13 +94,13 @@ const NewsItem = (props) => {
                     fontSize: '0.95rem',
                     lineHeight: '1.6'
                 }}>
-                    {description}
+                    {truncateText(description, 88)}
                 </p>
 
                 {/* Footer / Meta */}
                 <div className="d-flex justify-content-between align-items-center mt-auto pt-3 border-top" style={{ borderColor: 'var(--border-color)' }}>
                     <small className="text-muted fst-italic">
-                        By {author ? author.slice(0, 20) + (author.length > 20 ? '...' : '') : "Unknown"}
+                        By {author ? truncateText(author, 20) : 'Unknown'}
                     </small>
                     <span
                         className="btn btn-link text-decoration-none p-0 fw-bold"
@@ -112,7 +111,7 @@ const NewsItem = (props) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default NewsItem;
+export default NewsCard;

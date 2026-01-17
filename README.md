@@ -1,12 +1,12 @@
 # 📰 inBrief
 
 [![React](https://img.shields.io/badge/React-18.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.0-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
 [![NewsAPI](https://img.shields.io/badge/API-NewsAPI-FF6B6B?style=for-the-badge)](https://newsapi.org/)
-[![GitHub Pages](https://img.shields.io/badge/Deployed-GitHub%20Pages-222222?style=for-the-badge&logo=github&logoColor=white)](https://pulkirjaincs.github.io/inBrief)
 
-> A modern, responsive news aggregation application built with React. Features infinite scroll, real-time loading indicators, and category-based news browsing.
+> A modern, responsive news aggregation application built with React and Vite. Features infinite scroll, real-time loading indicators, and category-based news browsing.
 
 ## 🌐 Live Demo
 
@@ -22,7 +22,7 @@
 - **🔗 Social Sharing**: Native sharing integration to easily share articles via WhatsApp, Twitter, etc.
 - **🌗 Dark Mode**: Premium dark mode support with system preference detection
 - **📂 Category Navigation**: Browse news by categories (Business, Technology, Sports, Science, Health, Entertainment)
-- **🌍 Multi-country Support**: Currently configured for Indian news with easy country switching
+- **🌍 Multi-country Support**: Currently configured for US news with easy country switching
 - **🎨 Modern Premium UI**: Glassmorphism aesthetics, smooth animations, and polished typography
 - **📊 Progress Tracking**: Visual progress indicators during data fetching
 
@@ -30,14 +30,14 @@
 
 | Category | Technology |
 |----------|------------|
+| **Build Tool** | Vite 5.4 |
 | **Frontend Framework** | React 18.2.0 |
 | **Routing** | React Router DOM 6.22.3 |
-| **Styling** | Bootstrap 5.0 |
+| **Styling** | Bootstrap 5.0 + Custom CSS |
 | **API** | NewsAPI.org |
 | **Infinite Scroll** | react-infinite-scroll-component |
 | **Loading UI** | react-top-loading-bar |
-| **Deployment** | GitHub Pages / Vercel |
-| **Package Manager** | npm |
+| **Deployment** | Vercel |
 
 ## 🚀 Quick Start
 
@@ -60,43 +60,72 @@ npm install
 echo "VITE_NEWS_API=your_api_key_here" > .env
 
 # Start development server
-npm run dev
+npm run start
 ```
 
 ### Available Scripts
 
 | Script | Description |
 |--------|-------------|
-| `npm run dev` | Runs the app in development mode |
+| `npm run start` | Runs the app in development mode |
 | `npm run build` | Builds the app for production |
 | `npm run preview` | Previews the production build |
-| `npm run deploy` | Deploys to GitHub Pages |
 
 ## 📁 Project Structure
 
 ```
 inBrief/
+├── api/
+│   └── news.js                 # Serverless API function (Vercel)
 ├── public/
-│   ├── index.html
 │   └── manifest.json
 ├── src/
+│   ├── assets/                 # Static assets (images, icons)
 │   ├── components/
-│   │   ├── Navbar.jsx          # Navigation with category dropdown
-│   │   ├── News.jsx            # Main news component with infinite scroll
-│   │   ├── NewsItem.jsx        # Individual news card component
-│   │   ├── NewsModal.jsx       # Modal for detailed article view
-│   │   ├── SavedNews.jsx       # Bookmarked articles page
-│   │   └── Spinner.jsx         # Loading spinner component
+│   │   ├── common/             # Reusable UI components
+│   │   │   └── Spinner/
+│   │   ├── layout/             # Layout components
+│   │   │   └── Navbar/
+│   │   └── news/               # News feature components
+│   │       ├── NewsCard/
+│   │       ├── NewsList/
+│   │       ├── NewsModal/
+│   │       └── SavedNews/
 │   ├── context/
-│   │   ├── BookmarksContext.jsx # State management for bookmarks
-│   │   └── ThemeContext.jsx    # Theme toggle logic
-│   ├── App.jsx                 # Main app component with routing
-│   ├── App.css                 # Application styles
-│   ├── index.jsx               # Application entry point
-│   └── index.css               # Global styles
-├── package.json               # Dependencies and scripts
-└── README.md                  # Project documentation
+│   │   ├── BookmarksContext.jsx  # Bookmark state management
+│   │   └── ThemeContext.jsx      # Theme toggle logic
+│   ├── hooks/
+│   │   └── useNews.js          # Custom hook for news fetching
+│   ├── pages/
+│   │   ├── HomePage.jsx        # Home route component
+│   │   ├── CategoryPage.jsx    # Category route component
+│   │   └── SavedPage.jsx       # Bookmarks page
+│   ├── services/
+│   │   └── newsApi.js          # API service layer
+│   ├── styles/
+│   │   ├── global.css          # Global styles & design system
+│   │   └── app.css             # App-specific styles
+│   ├── utils/
+│   │   ├── constants.js        # App configuration & constants
+│   │   └── formatters.js       # Utility functions
+│   ├── App.jsx                 # Main app with routing
+│   └── index.jsx               # Entry point
+├── index.html                  # HTML template
+├── vite.config.js              # Vite configuration
+├── vercel.json                 # Vercel deployment config
+└── package.json
 ```
+
+## 🏗️ Architecture
+
+The project follows a clean, scalable architecture:
+
+- **`components/`** - Organized by type: `common` (reusable), `layout` (structural), `news` (feature-specific)
+- **`hooks/`** - Custom React hooks for data fetching and state logic
+- **`services/`** - API layer with caching utilities
+- **`pages/`** - Route-level page components
+- **`utils/`** - Helper functions and configuration constants
+- **`context/`** - React Context providers for global state
 
 ## 🚀 Deployment
 
@@ -105,28 +134,22 @@ The easiest way to deploy is using Vercel:
 
 1. Push your code to a GitHub repository.
 2. Log in to [Vercel](https://vercel.com/) and click "Add New Project".
-3. Import your repository. Vercel will automatically detect Vite/React.
-4. Click **Deploy**.
+3. Import your repository. Vercel will automatically detect Vite.
+4. Add environment variable: `VITE_NEWS_API=your_api_key`
+5. Click **Deploy**.
 
-*Note: A `vercel.json` file is included to handle client-side routing.*
-
-### GitHub Pages Deployment
-1. Update `homepage` in `package.json`.
-2. Run deployment script:
-```bash
-npm run deploy
-```
+*Note: A `vercel.json` file is included to handle client-side routing. The `/api/news.js` serverless function proxies NewsAPI requests in production.*
 
 ## 📈 Performance Optimizations
 
 | Optimization | Implementation |
 |-------------|----------------|
-| **Lazy Loading** | Images load as needed with fallbacks |
-| **Smart Caching** | Reduces API calls by caching session data |
-| **State Management** | Minimal re-renders with Context API |
-| **API Optimization** | Paginated requests to reduce load times |
-| **Responsive Images** | Optimized image handling with fallbacks |
-| **Code Splitting** | React Router for efficient bundle splitting |
+| **Lazy Loading** | Images load with `loading="lazy"` attribute |
+| **Smart Caching** | Session storage caching in `useNews` hook |
+| **Custom Hooks** | Separated data logic for minimal re-renders |
+| **API Service Layer** | Centralized API calls with caching utilities |
+| **Code Splitting** | Route-based splitting with React Router |
+| **Dynamic Routes** | Categories generated from config, not hardcoded |
 
 ## 🔮 Roadmap
 
@@ -135,6 +158,7 @@ npm run deploy
 - [x] 📌 Bookmark/save articles
 - [x] ⚡ Smart Caching
 - [x] 🔗 Social Sharing
+- [x] 🏗️ Scalable project structure
 - [ ] ⚙️ User preferences
 - [ ] 🔔 Push notifications
 - [ ] 📱 Offline support with PWA
@@ -143,7 +167,7 @@ npm run deploy
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md).
+We welcome contributions! 
 
 ### Quick Start for Contributors
 ```bash
@@ -178,6 +202,6 @@ git push origin feature/your-feature-name
 [![GitHub stars](https://img.shields.io/github/stars/pulkitjaincs/inBrief?style=social)](https://github.com/pulkitjaincs/inBrief/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/pulkitjaincs/inBrief?style=social)](https://github.com/pulkitjaincs/inBrief/network/members)
 
-*Built with ❤️ using React*
+*Built with ❤️ using React + Vite*
 
 </div>

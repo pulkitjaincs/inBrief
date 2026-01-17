@@ -1,19 +1,27 @@
-import Navbar from './components/Navbar';
-import News from './components/News';
-import './App.css';
-import React, { useState } from 'react'
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoadingBar from 'react-top-loading-bar';
+
+// Layout
+import Navbar from './components/layout/Navbar/Navbar';
+
+// Pages
+import HomePage from './pages/HomePage';
+import CategoryPage from './pages/CategoryPage';
+import SavedPage from './pages/SavedPage';
+
+// Context
 import { ThemeProvider } from './context/ThemeContext';
 import { BookmarksProvider } from './context/BookmarksContext';
-import SavedNews from './components/SavedNews';
+
+// Config
+import { CATEGORIES } from './utils/constants';
+
+// Styles
+import './styles/global.css';
+import './styles/app.css';
 
 const App = () => {
-  const pageSize = 10;
   const apiKey = import.meta.env.VITE_NEWS_API;
   const [progress, setProgress] = useState(0);
 
@@ -22,27 +30,42 @@ const App = () => {
       <BookmarksProvider>
         <div>
           <Router>
-            <LoadingBar
-              color='#f11946'
-              progress={progress}
-            />
+            <LoadingBar color="#f11946" progress={progress} />
             <Navbar />
             <Routes>
-              <Route exact path='/' element={<News setProgress={setProgress} apiKey={apiKey} key="general" pageSize={pageSize} country='us' category='general' />} />
-              <Route exact path='/inBrief' element={<News setProgress={setProgress} apiKey={apiKey} key="general" pageSize={pageSize} country='us' category='general' />} />
-              <Route exact path='/business' element={<News setProgress={setProgress} apiKey={apiKey} key="business" pageSize={pageSize} country='us' category='business' />} />
-              <Route exact path='/entertainment' element={<News setProgress={setProgress} apiKey={apiKey} key="entertainment" pageSize={pageSize} country='us' category='entertainment' />} />
-              <Route exact path='/technology' element={<News setProgress={setProgress} apiKey={apiKey} key="technology" pageSize={pageSize} country='us' category='technology' />} />
-              <Route exact path='/sports' element={<News setProgress={setProgress} apiKey={apiKey} key="sports" pageSize={pageSize} country='us' category='sports' />} />
-              <Route exact path='/science' element={<News setProgress={setProgress} apiKey={apiKey} key="science" pageSize={pageSize} country='us' category='science' />} />
-              <Route exact path='/health' element={<News setProgress={setProgress} apiKey={apiKey} key="health" pageSize={pageSize} country='us' category='health' />} />
-              <Route exact path='/saved' element={<SavedNews />} />
+              {/* Home route */}
+              <Route
+                path="/"
+                element={<HomePage setProgress={setProgress} apiKey={apiKey} />}
+              />
+              <Route
+                path="/inBrief"
+                element={<HomePage setProgress={setProgress} apiKey={apiKey} />}
+              />
+
+              {/* Dynamic category routes */}
+              {CATEGORIES.filter(cat => cat.key !== 'general').map((category) => (
+                <Route
+                  key={category.key}
+                  path={category.path}
+                  element={
+                    <CategoryPage
+                      category={category.key}
+                      setProgress={setProgress}
+                      apiKey={apiKey}
+                    />
+                  }
+                />
+              ))}
+
+              {/* Saved/Bookmarks route */}
+              <Route path="/saved" element={<SavedPage />} />
             </Routes>
           </Router>
         </div>
       </BookmarksProvider>
     </ThemeProvider>
-  )
-}
+  );
+};
 
 export default App;

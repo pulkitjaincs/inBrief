@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from "react-router-dom";
-import { useTheme } from '../context/ThemeContext';
+import { Link } from 'react-router-dom';
+import { useTheme } from '../../../context/ThemeContext';
 import { FaMoon, FaSun, FaDesktop, FaBookmark } from 'react-icons/fa';
+import { CATEGORIES } from '../../../utils/constants';
 
 const Navbar = () => {
     const { theme, setTheme } = useTheme();
@@ -12,14 +13,28 @@ const Navbar = () => {
                 <Link className="navbar-brand fw-bold fs-4" to="/" style={{ color: 'var(--text-primary)' }}>
                     inBrief
                 </Link>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button
+                    className="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
                     <span className="navbar-toggler-icon" style={{ filter: theme === 'dark' ? 'invert(1)' : 'none' }}></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                        {['general', 'business', 'entertainment', 'health', 'science', 'sports', 'technology'].map((category) => (
-                            <li className="nav-item" key={category}>
-                                <Link className="nav-link nav-link-custom text-capitalize fw-medium mx-2" to={`/${category === 'general' ? '' : category}`} style={{ color: 'var(--text-secondary)' }}>{category}</Link>
+                        {CATEGORIES.map((category) => (
+                            <li className="nav-item" key={category.key}>
+                                <Link
+                                    className="nav-link nav-link-custom text-capitalize fw-medium mx-2"
+                                    to={category.path}
+                                    style={{ color: 'var(--text-secondary)' }}
+                                >
+                                    {category.label}
+                                </Link>
                             </li>
                         ))}
                     </ul>
@@ -55,7 +70,7 @@ const Navbar = () => {
                 </div>
             </div>
         </nav>
-    )
-}
+    );
+};
 
 export default Navbar;

@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { FaTimes, FaExternalLinkAlt, FaShareAlt, FaBookmark, FaRegBookmark } from 'react-icons/fa';
-import { useBookmarks } from '../context/BookmarksContext';
+import { useBookmarks } from '../../../context/BookmarksContext';
+import { FALLBACK_IMAGE } from '../../../utils/constants';
+import { formatDate } from '../../../utils/formatters';
 
 const NewsModal = ({ article, onClose }) => {
     const { addToBookmarks, removeFromBookmarks, isBookmarked } = useBookmarks();
@@ -27,7 +29,7 @@ const NewsModal = ({ article, onClose }) => {
             }
         } else {
             navigator.clipboard.writeText(article.url);
-            alert("Link copied to clipboard!");
+            alert('Link copied to clipboard!');
         }
     };
 
@@ -39,24 +41,25 @@ const NewsModal = ({ article, onClose }) => {
         };
     }, []);
 
-    const fallbackImage = "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80";
-
     return (
-        <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            backdropFilter: 'blur(5px)',
-            zIndex: 1050,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-            animation: 'fadeIn 0.2s ease-out'
-        }} onClick={onClose}>
+        <div
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                backdropFilter: 'blur(5px)',
+                zIndex: 1050,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '20px',
+                animation: 'fadeIn 0.2s ease-out'
+            }}
+            onClick={onClose}
+        >
             <div
                 className="modal-content"
                 style={{
@@ -73,24 +76,26 @@ const NewsModal = ({ article, onClose }) => {
                     flexDirection: 'column',
                     animation: 'scaleUp 0.3s cubic-bezier(0.165, 0.84, 0.44, 1)'
                 }}
-                onClick={(e) => e.stopPropagation()} // Prevent close on content click
+                onClick={(e) => e.stopPropagation()}
             >
                 {/* Header Image */}
-                <div style={{
-                    position: 'relative',
-                    width: '100%',
-                    height: 'auto',
-                    minHeight: '300px',
-                    maxHeight: '50vh',
-                    flexShrink: 0,
-                    backgroundColor: '#000',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden'
-                }}>
+                <div
+                    style={{
+                        position: 'relative',
+                        width: '100%',
+                        height: 'auto',
+                        minHeight: '300px',
+                        maxHeight: '50vh',
+                        flexShrink: 0,
+                        backgroundColor: '#000',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        overflow: 'hidden'
+                    }}
+                >
                     <img
-                        src={article.urlToImage || fallbackImage}
+                        src={article.urlToImage || FALLBACK_IMAGE}
                         alt={article.title}
                         style={{ width: '100%', height: '100%', objectFit: 'contain', maxHeight: '50vh' }}
                     />
@@ -125,16 +130,18 @@ const NewsModal = ({ article, onClose }) => {
                     >
                         {isSaved ? <FaBookmark size={18} /> : <FaRegBookmark size={18} />}
                     </button>
-                    <div style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        padding: '20px',
-                        background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
-                        color: 'white'
-                    }}>
-                        <span className="badge bg-danger mb-2">{article.source.name}</span>
+                    <div
+                        style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            padding: '20px',
+                            background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
+                            color: 'white'
+                        }}
+                    >
+                        <span className="badge bg-danger mb-2">{article.source?.name}</span>
                         <h4 style={{ fontWeight: '700', textShadow: '0 2px 4px rgba(0,0,0,0.5)', color: '#ffffff' }}>
                             {article.title}
                         </h4>
@@ -143,20 +150,40 @@ const NewsModal = ({ article, onClose }) => {
 
                 {/* Content Body */}
                 <div style={{ padding: '40px', overflowY: 'auto' }}>
-                    <div className="d-flex align-items-center mb-4 small text-uppercase fw-bold" style={{ letterSpacing: '1px', color: 'var(--text-secondary)' }}>
-                        <span style={{ color: 'var(--text-accent)' }}>{article.source.name}</span>
+                    <div
+                        className="d-flex align-items-center mb-4 small text-uppercase fw-bold"
+                        style={{ letterSpacing: '1px', color: 'var(--text-secondary)' }}
+                    >
+                        <span style={{ color: 'var(--text-accent)' }}>{article.source?.name}</span>
                         <span className="mx-2">•</span>
-                        <span>{new Date(article.publishedAt).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                        <span>
+                            {new Date(article.publishedAt).toLocaleDateString(undefined, {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            })}
+                        </span>
                     </div>
 
-                    <p style={{ fontSize: '1.25rem', lineHeight: '1.6', color: 'var(--text-primary)', fontWeight: '300', marginBottom: '2rem' }}>
+                    <p
+                        style={{
+                            fontSize: '1.25rem',
+                            lineHeight: '1.6',
+                            color: 'var(--text-primary)',
+                            fontWeight: '300',
+                            marginBottom: '2rem'
+                        }}
+                    >
                         {article.description}
                     </p>
 
                     <hr style={{ borderColor: 'var(--border-color)', margin: '2rem 0' }} />
 
                     <p style={{ fontSize: '1.1rem', lineHeight: '1.8', color: 'var(--text-secondary)' }}>
-                        {article.content ? article.content.split('[')[0] : "Full content is available at the source website. Please click the button below to read the complete article."}
+                        {article.content
+                            ? article.content.split('[')[0]
+                            : 'Full content is available at the source website. Please click the button below to read the complete article.'}
                     </p>
                     {article.author && (
                         <div className="mt-4 pt-3 fst-italic small" style={{ color: 'var(--text-secondary)' }}>
@@ -166,13 +193,15 @@ const NewsModal = ({ article, onClose }) => {
                 </div>
 
                 {/* Footer */}
-                <div style={{
-                    padding: '20px 30px',
-                    borderTop: '1px solid var(--border-color)',
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    backgroundColor: 'var(--bg-body)'
-                }}>
+                <div
+                    style={{
+                        padding: '20px 30px',
+                        borderTop: '1px solid var(--border-color)',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        backgroundColor: 'var(--bg-body)'
+                    }}
+                >
                     <button
                         className="btn btn-outline-secondary me-2"
                         onClick={onClose}
@@ -206,15 +235,15 @@ const NewsModal = ({ article, onClose }) => {
             {/* Inline Animation Styles */}
             <style>
                 {`
-                    @keyframes fadeIn {
-                        from { opacity: 0; }
-                        to { opacity: 1; }
-                    }
-                    @keyframes scaleUp {
-                        from { transform: scale(0.9); opacity: 0; }
-                        to { transform: scale(1); opacity: 1; }
-                    }
-                `}
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          @keyframes scaleUp {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+          }
+        `}
             </style>
         </div>
     );
